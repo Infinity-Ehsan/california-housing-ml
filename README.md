@@ -1,162 +1,134 @@
-# 🏠 California Housing Price Prediction (End-to-End Machine Learning Project)
+# 🏠 California Housing Price Prediction
 
-A complete end-to-end Machine Learning project for predicting median house prices in California using the **California Housing dataset** from Scikit-learn.
-
-This project demonstrates a full ML pipeline including data exploration, feature engineering, model building, hyperparameter tuning, evaluation, and model interpretability using SHAP.
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![ML](https://img.shields.io/badge/Machine-Learning-orange)
+![Scikit-learn](https://img.shields.io/badge/Scikit--Learn-Model-green)
+![Status](https://img.shields.io/badge/Project-Complete-success)
 
 ---
 
-# 📊 Dataset
+## 📌 Project Overview
+
+This project is an end-to-end **machine learning regression pipeline** built on the California Housing dataset.
+
+The goal is to predict house prices and compare multiple ML models using:
+
+- Baseline training
+- Hyperparameter tuning (GridSearchCV)
+- Cross-validation (KFold)
+- Model evaluation (R², MSE)
+- Model interpretability (SHAP)
+
+---
+
+## 📊 Dataset
 
 - Source: `sklearn.datasets.fetch_california_housing`
-- Samples: 20,640
+- Samples: ~20,640
 - Features: 8 numerical features
-- Target: Median house value (continuous regression problem)
+- Target: Median House Value
 
 ---
 
-# 🎯 Objective
+## ⚙️ Workflow
 
-The goal is to build and compare multiple regression models to predict housing prices accurately while ensuring interpretability and robustness.
-
----
-
-# 🧠 Models Used
-
-## 🌱 Linear Regression (Baseline)
-- Simple linear model
-- Used as a baseline reference
-
-## 🌲 Random Forest Regressor
-- Bagging ensemble method
-- High stability and robustness
-- Handles non-linear relationships well
-
-## 🌿 Gradient Boosting Regressor
-- Boosting ensemble method
-- High predictive performance
-- More sensitive to hyperparameters
+### 1. Data Preparation
+- Load dataset
+- Convert to DataFrame
+- Define features (X) and target (y)
+- Train/Test split (80/20)
 
 ---
 
-# ⚙️ ML Pipeline
+### 2. Models Implemented
 
-All models were implemented using **Scikit-learn Pipelines** to ensure:
-
-- No data leakage
-- Clean workflow
-- Reproducibility
-- Scalable structure
+- Ridge Regression (Linear baseline)
+- Random Forest Regressor
+- Gradient Boosting Regressor
 
 ---
 
-# 🔍 Hyperparameter Tuning
+### 3. Model Training Strategy
 
-Hyperparameters were optimized using **GridSearchCV** with cross-validation.
+For each model:
 
-### 🌲 Random Forest:
-- n_estimators
-- max_depth
-- min_samples_split
-- max_features
-
-### 🌿 Gradient Boosting:
-- n_estimators
-- learning_rate
-- max_depth
-- subsample
-
----
-
-# 📊 Model Performance Comparison
-
-```python
-import pandas as pd
-
-results = pd.DataFrame({
-    "Model": ["Linear Regression", "Random Forest", "Gradient Boosting"],
-    "Mean_CV_R2": [0.62, 0.8125, 0.8387],
-    "CV_Std": [0.08, 0.00047, 0.0046]
-})
-
-results.sort_values(by="Mean_CV_R2", ascending=False)
-
-
-🏆 Key Results
-
-🌿 Gradient Boosting achieved the highest predictive performance (R² ≈ 0.84)
-🌲 Random Forest showed the highest stability (lowest variance)
-🌱 Linear Regression served as a simple baseline model
-
-
-🔍 Model Interpretability (SHAP)
-
-SHAP (SHapley Additive exPlanations) was used to interpret model predictions.
-
-Key Insights:
-
-📌 Median Income (MedInc) is the strongest predictor of house value
-📌 Geographic location (Latitude & Longitude) strongly influences prices
-📌 Random Forest distributes feature importance more evenly
-📌 Gradient Boosting focuses more on key predictive features
-
-
-🚀 How to Run
-
-git clone https://github.com/your-username/california-housing-ml.git
-cd california-housing-ml
-
-pip install -r requirements.txt
-
-
-Run notebooks in order:
-
-📊 EDA
-🧠 Modeling
-⚙️ Hyperparameter Tuning
-🔍 SHAP Analysis
-
-
-📦 Requirements
-
-numpy
-pandas
-scikit-learn
-matplotlib
-seaborn
-shap
-
-
-🧠 Skills Demonstrated
-
-- End-to-end Machine Learning pipeline design
-- Regression modeling
-- Feature engineering & preprocessing
-- Cross-validation (K-Fold)
+- Baseline model training
+- Cross-validation (KFold = 5)
 - Hyperparameter tuning (GridSearchCV)
-- Model comparison & evaluation
-- Feature importance analysis
-- SHAP explainability
-- Production-style ML workflow
+- Best model selection
+
+---
+
+### 4. Evaluation Metrics
+
+- R² Score (Primary metric)
+- Mean Squared Error (MSE)
+- Cross-validation Mean & Standard Deviation (Variance)
+
+---
+
+## 🏆 Final Results (Leaderboard)
+
+| Rank | Model | CV R² | Test R² |
+|------|------|------|--------|
+| 🥇 | Gradient Boosting (Best) | 0.842 | 0.848 |
+| 🥈 | Random Forest (Best) | 0.819 | 0.818 |
+| 🥉 | Random Forest (Base) | 0.810 | 0.805 |
+| 4 | Gradient Boosting (Base) | 0.788 | 0.776 |
+| 5 | Ridge (Best) | 0.611 | 0.576 |
+| 6 | Ridge (Base) | 0.601 | 0.576 |
+
+---
+
+## 🔍 SHAP Explainability
+
+SHAP (SHapley Additive Explanations) was used to interpret model predictions.
+
+### 📌 Global Feature Importance (Across Models)
+
+| Feature | Ridge | Random Forest | Gradient Boosting |
+|--------|------|--------------|------------------|
+| Latitude | High | Medium | High |
+| Longitude | High | Medium | High |
+| MedInc | Medium | High | Medium |
+| Population | High | Low | Very Low |
+| HouseAge | Medium | Low | Low |
+| AveRooms | Low | Low | Low |
+| AveOccup | Low | Medium | Medium |
+| AveBedrms | Low | Low | Low |
+
+---
+
+#### 📊 Key SHAP Insight
+
+Most important drivers of house prices:
+1. Location (Latitude / Longitude)
+2. Income (MedInc)
+3. Demographics (Population, Occupancy)
 
 
-📌 Future Improvements
+##### 💾 Model Persistence (Production Ready)
 
-🚀 Experiment with XGBoost / LightGBM
-🌐 Deploy model using FastAPI
-📊 Build interactive dashboard (Streamlit)
-💾 Add model persistence (joblib / pickle)
-🐳 Dockerize the project
+To ensure reproducibility and deployment readiness, the final trained model is serialized using `joblib`.
+
+This enables:
+- Fast loading without retraining
+- Consistent inference results
+- Easy integration into APIs or applications
+
+###### 🧠 Key Insights
+
+- Location (Latitude / Longitude) is the strongest predictor of housing prices
+- Income (MedInc) is highly correlated with house value
+- Tree-based models outperform linear models significantly
 
 
-⭐ Conclusion
+###### 🏁 Conclusion
 
-This project demonstrates a complete machine learning workflow from raw data to interpretable and optimized models, focusing on both predictive performance and model explainability.
-It highlights the trade-off between:
-🌿 Higher accuracy (Gradient Boosting)
-🌲 Higher stability (Random Forest)
+Gradient Boosting achieved the best performance with the highest R² score, making it the most suitable model for this dataset.
 
 
-📬 Author
+###### 🚀 How to Run
 
-Built as a personal ML learning project focused on real-world workflow, model comparison, and explainability.
+```bash
+python main.py
