@@ -28,6 +28,22 @@ The goal is to predict house prices and compare multiple ML models using:
 - Features: 8 numerical features
 - Target: Median House Value
 
+
+## 📂 Project Structure
+     california-housing-ml/
+     │
+     ├── .gitignore
+     ├── README.md
+     ├── main.py
+     ├── requirements.txt
+     │
+     ├── models/
+     │   └── gb_best_model.pkl
+     │
+     └── notebooks/
+         ├── 01_housing_eda.ipynb
+         └── 02_modeling.ipynb
+
 ---
 
 ## ⚙️ Workflow
@@ -63,20 +79,20 @@ For each model:
 
 - R² Score (Primary metric)
 - Mean Squared Error (MSE)
-- Cross-validation Mean & Standard Deviation (Variance)
-
+- Cross-validation Mean R²
+- Cross-validation Standard Deviation (model stability)
 ---
 
 ## 🏆 Final Results (Leaderboard)
 
-| Rank | Model | CV R² | Test R² |
-|------|------|------|--------|
-| 🥇 | Gradient Boosting (Best) | 0.842 | 0.848 |
-| 🥈 | Random Forest (Best) | 0.819 | 0.818 |
-| 🥉 | Random Forest (Base) | 0.810 | 0.805 |
-| 4 | Gradient Boosting (Base) | 0.788 | 0.776 |
-| 5 | Ridge (Best) | 0.611 | 0.576 |
-| 6 | Ridge (Base) | 0.601 | 0.576 |
+| Rank | Model                    | CV R²| Test R²|
+|------|--------------------------|------|--------|
+| 🥇  | Gradient Boosting (Best) | 0.842 | 0.848 |
+| 🥈  | Random Forest (Best)     | 0.819 | 0.818 |
+| 🥉  | Random Forest (Base)     | 0.805 | 0.805 |
+| 4    | Gradient Boosting (Base) | 0.788 | 0.776 |
+| 5    | Ridge (Best)             | 0.611 | 0.576 |
+| 6    | Ridge (Base)             | 0.611 | 0.576 |
 
 ---
 
@@ -86,26 +102,26 @@ SHAP (SHapley Additive Explanations) was used to interpret model predictions.
 
 ### 📌 Global Feature Importance (Across Models)
 
-| Feature | Ridge | Random Forest | Gradient Boosting |
-|--------|------|--------------|------------------|
-| Latitude | High | Medium | High |
-| Longitude | High | Medium | High |
-| MedInc | Medium | High | Medium |
-| Population | High | Low | Very Low |
-| HouseAge | Medium | Low | Low |
-| AveRooms | Low | Low | Low |
-| AveOccup | Low | Medium | Medium |
-| AveBedrms | Low | Low | Low |
+| Feature  | Ridge  | Random Forest | Gradient Boosting |
+|----------|--------|---------------|-------------------|
+|Latitude  |High    |Medium         |High               |
+|Longitude |High    |Medium         |High               |
+|MedInc    |High    |High           |Medium             |
+|AveOccup  |Very Low|Medium         |Medium             |
+|AveRooms  |Low     |Low            |Low                |
+|HouseAge  |Low     |Low            |Low                |
+|AveBedrms |Low     |Very Low       |Very Low           |
+|Population|Very Low|Very Low       |Very Low           |
 
 ---
 
 #### 📊 Key SHAP Insight
 
-Most important drivers of house prices:
-1. Location (Latitude / Longitude)
-2. Income (MedInc)
-3. Demographics (Population, Occupancy)
-
+SHAP analysis shows that:
+1. **Location (Latitude and Longitude)** are consistently among the strongest predictors of house prices across all models.
+2. **Median Income (MedInc)** is one of the most influential features, especially for Ridge and Random Forest.
+3. **Average Occupancy (AveOccup)** has low impact in the linear model but becomes more important in tree-based models.
+4. Features such as **Population and AveBedrms** show consistently low contribution to model predictions.
 
 ##### 💾 Model Persistence (Production Ready)
 
@@ -116,11 +132,18 @@ This enables:
 - Consistent inference results
 - Easy integration into APIs or applications
 
+Saved model:
+
+`models/gb_best_model.pkl`
+
+
 ###### 🧠 Key Insights
 
-- Location (Latitude / Longitude) is the strongest predictor of housing prices
-- Income (MedInc) is highly correlated with house value
-- Tree-based models outperform linear models significantly
+- SHAP analysis shows that geographical features (Latitude and Longitude) are consistently among the most important predictors across models.
+
+- Median Income (MedInc) is also a major contributor, especially in Ridge and Random Forest.
+
+- Tree-based models capture additional nonlinear relationships, making features like AveOccup more influential compared to the linear Ridge model.
 
 
 ###### 🏁 Conclusion
@@ -132,3 +155,30 @@ Gradient Boosting achieved the best performance with the highest R² score, maki
 
 ```bash
 python main.py
+```
+
+## 📈 Best Model
+
+The final selected model is:
+
+**Gradient Boosting Regressor**
+
+Best parameters:
+
+```python
+{
+'learning_rate': 0.1,
+'max_depth': 5,
+'n_estimators': 1000,
+'subsample': 0.8
+}
+```
+
+###### 🔮 Future Improvements
+
+Possible future improvements:
+
+- Feature engineering for numerical features
+- Experiment with XGBoost / LightGBM
+- Model deployment using FastAPI
+- Automated ML pipeline with CI/CD

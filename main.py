@@ -1,4 +1,6 @@
 import pandas as pd
+import joblib
+import os
 from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -58,3 +60,10 @@ print("="*40)
 print(f"R2 Score: {r2:.4f}")
 print(f"MSE: {mse:.4f}")
 print("="*40)
+
+# -----------------------
+# 7. Save Model
+# -----------------------
+os.makedirs("models", exist_ok=True)
+joblib.dump(best_gb_model, "models/best_gb_model.pkl")
+print("✅ Model saved to models/best_gb_model.pkl")
